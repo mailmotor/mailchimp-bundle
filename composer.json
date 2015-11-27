@@ -15,10 +15,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/http-kernel": "~2.3"
-    },
-    "require-dev": {
-        "symfony/framework-bundle": "~2.3"
+        "pacely/mailchimp-apiv3": "dev-master",
+        "mailmotor/mailmotor-bundle": "dev-master"
     },
     "autoload": {
         "psr-4": { "MailMotor\\Bundle\\MailChimpBundle\\": "" }
