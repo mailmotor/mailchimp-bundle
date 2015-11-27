@@ -1,0 +1,26 @@
+{
+    "name": "mailmotor/mailchimp-bundle",
+    "type": "library",
+    "description": "This Symfony2 bundle loads in MailChimp as a service. So you can subscribe/unsubscribe members to MailChimp.",
+    "keywords": ["symfony2", "bundle", "php"],
+    "homepage": "https://github.com/mailmotor/mailchimp-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jeroen Desloovere",
+            "email": "info@jeroendesloovere.be",
+            "homepage": "http://jeroendesloovere.be",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/http-kernel": "~2.3"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "~2.3"
+    },
+    "autoload": {
+        "psr-4": { "MailMotor\\Bundle\\MailChimpBundle\\": "" }
+    }
+}
