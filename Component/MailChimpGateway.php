@@ -72,6 +72,33 @@ final class MailChimpGateway implements Gateway
 	}
 
 	/**
+	 * Has status
+	 *
+	 * @param string $email
+	 * @param string $listId
+	 * @param string $status
+	 * @return boolean
+	 */
+	public function hasStatus(
+		$email,
+		$listId = null,
+		$status
+	) {
+		$member = $this->get(
+			$email,
+			$listId
+		);
+
+		// we have a list member
+		if ($member) {
+			return ($member['status'] === $status);
+		// we don't have a member
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Subscribe
 	 *
 	 * @param string $email
