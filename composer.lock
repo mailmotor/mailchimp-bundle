@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "84abd422304930c01bbe43f51d155a0c",
-    "content-hash": "879134556857555974b02aaa031ad710",
+    "hash": "a245e336f9abd94f20bf88f95d97c13b",
+    "content-hash": "170fa7a4485c32ec5874d5d29dd6ee8d",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -447,7 +447,7 @@
         },
         {
             "name": "pacely/mailchimp-apiv3",
-            "version": "dev-master",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pacely/mailchimp-api-v3.git",
@@ -843,7 +843,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "pacely/mailchimp-apiv3": 20,
         "mailmotor/mailmotor-bundle": 20
     },
     "prefer-stable": false,

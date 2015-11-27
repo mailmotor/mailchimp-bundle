@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "pacely/mailchimp-apiv3": "@dev",
+        "pacely/mailchimp-apiv3": "~1.0",
         "mailmotor/mailmotor-bundle": "@dev"
     },
     "autoload": {
