@@ -1,6 +1,6 @@
 services:
     mailchimp.service:
         class: MailMotor\Bundle\MailChimpBundle\Component\MailChimpService
-		arguments:
-			- "%mailchimp.api_key%"
-			- "%mailchimp.list_id%"
+        arguments:
+            - "%mailmotor.mailchimp.api_key%"
+            - "%mailmotor.mailchimp.list_id%"
