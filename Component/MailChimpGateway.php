@@ -51,7 +51,7 @@ final class MailChimpGateway implements Gateway
 	 *
 	 * @param string $email
 	 * @param string $listId
-	 * @return mixed False if not found, the array if found
+	 * @return array
 	 */
 	public function get(
 		$email,
@@ -59,15 +59,16 @@ final class MailChimpGateway implements Gateway
 	) {
 		try
 		{
+			$listId = $this->getListId($listId);
 			$result = $this->api->request(
-				'lists/' . $this->getListId($listId) . '/members/' . $this->getEmailHash($email),
+				'lists/' . $listId . '/members/' . $this->getEmailHash($email),
 				array(),
 				'get'
 			);
 
 			return $result->all();
 		} catch (\Exception $e) {
-			return false;
+			return new \Exception('Member not found with email = "' . $email . ' in list with id = "' . $listId . ".'');
 		}
 	}
 
@@ -92,10 +93,10 @@ final class MailChimpGateway implements Gateway
 		// we have a list member
 		if ($member) {
 			return ($member['status'] === $status);
-		// we don't have a member
-		} else {
-			return false;
 		}
+
+		// we don't have a member
+		return false;
 	}
 
 	/**
