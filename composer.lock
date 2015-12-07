@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f10ed15f63d71a49facef5c3c2fe2f43",
-    "content-hash": "90ca6f6916d2a332c5c33cecb34d8398",
+    "hash": "b1975b2986356550e8a3531d297e0be1",
+    "content-hash": "2407a1e7032f628d30d9f49f2bd4b1ce",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -396,6 +396,54 @@
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
             "time": "2015-10-19 06:01:02"
+        },
+        {
+            "name": "mailmotor/mailmotor-bundle",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mailmotor/mailmotor-bundle.git",
+                "reference": "58f2b2465319bfed9f30faa7652832dfc572c3d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mailmotor/mailmotor-bundle/zipball/58f2b2465319bfed9f30faa7652832dfc572c3d3",
+                "reference": "58f2b2465319bfed9f30faa7652832dfc572c3d3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/http-kernel": "~2.3"
+            },
+            "require-dev": {
+                "symfony/framework-bundle": "~2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MailMotor\\Bundle\\MailMotorBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeroen Desloovere",
+                    "email": "info@jeroendesloovere.be",
+                    "homepage": "http://jeroendesloovere.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "This Symfony2 bundle loads in MailMotor as a service. So you can subscribe/unsubscribe members to any mailinglist managing API. F.e.: MailChimp, CampaignMonitor, ...",
+            "homepage": "https://github.com/mailmotor/mailmotor-bundle",
+            "keywords": [
+                "Symfony2",
+                "bundle",
+                "php"
+            ],
+            "time": "2015-12-07 09:51:36"
         },
         {
             "name": "pacely/mailchimp-apiv3",
