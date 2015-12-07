@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b1975b2986356550e8a3531d297e0be1",
-    "content-hash": "2407a1e7032f628d30d9f49f2bd4b1ce",
+    "hash": "14a4125c8b5418b0bc2de56ef26fb3d8",
+    "content-hash": "940ffbaf9c927d8606c5b9a01a8e6c25",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -399,7 +399,7 @@
         },
         {
             "name": "mailmotor/mailmotor-bundle",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailmotor/mailmotor-bundle.git",
