@@ -108,21 +108,38 @@ final class MailChimpGateway implements Gateway
      *
      * @param string $email
      * @param string $listId
-     * @param array $mergeVars
+     * @param array $mergeFields
+     * @param string $language
      * @return boolean
      */
     public function subscribe(
         $email,
         $listId = null,
-        $mergeVars = array()
+        $mergeFields = array(),
+        $language = null
     ) {
+        // init body parameters
+        $bodyParameters = array(
+            'email_address' => $email,
+            'status' => 'subscribed',
+        );
+
+        // we received a language
+        if ($language !== null) {
+            // define language
+            $bodyParameters['language'] = $language;
+        }
+
+        // we received merge fields
+        if (!empty($mergeFields)) {
+            // define merge fields
+            $bodyParameters['merge_fields'] = $mergeFields;
+        }
+
         return $this->api->request(
-            'lists/' . $this->getListId($listId) . '/members',
-            array(
-                'email_address' => $email,
-                'status' => 'subscribed'
-            ),
-            'post'
+            'lists/' . $this->getListId($listId) . '/members/' . $this->getEmailHash($email),
+            $bodyParameters,
+            'put'
         );
     }
 
@@ -131,13 +148,13 @@ final class MailChimpGateway implements Gateway
      *
      * @param string $email
      * @param string $listId
-     * @param array $mergeVars
+     * @param array $mergeFields
      * @return boolean
      */
     public function unsubscribe(
         $email,
         $listId = null,
-        $mergeVars = array()
+        $mergeFields = array()
     ) {
         return $this->api->request(
             'lists/' . $this->getListId($listId) . '/members/' . $this->getEmailHash($email),
