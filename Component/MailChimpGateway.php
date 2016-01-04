@@ -95,7 +95,7 @@ final class MailChimpGateway implements Gateway
         );
 
         // we have a list member
-        if ($member && get_class($member) !== 'Exception') {
+        if ($member && (gettype($member) == 'object' && get_class($member) !== 'Exception')) {
             return ($member['status'] === $status);
         }
 
