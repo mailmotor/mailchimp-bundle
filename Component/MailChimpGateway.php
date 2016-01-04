@@ -3,6 +3,7 @@
 namespace MailMotor\Bundle\MailChimpBundle\Component;
 
 use MailMotor\Bundle\MailMotorBundle\Component\Gateway;
+use MailMotor\Bundle\MailMotorBundle\Component\MailMotorMember;
 use Mailchimp\Mailchimp;
 
 /**
@@ -72,7 +73,7 @@ final class MailChimpGateway implements Gateway
 
             return $result->all();
         } catch (\Exception $e) {
-            return new \Exception('Member not found with email = "' . $email . ' in list with id = "' . $listId . '".');
+            return false;
         }
     }
 
@@ -94,8 +95,8 @@ final class MailChimpGateway implements Gateway
             $listId
         );
 
-        // we have a list member
-        if ($member && (gettype($member) == 'object' && get_class($member) !== 'Exception')) {
+        // we have found a member
+        if (is_array($member)) {
             return ($member['status'] === $status);
         }
 
@@ -159,9 +160,9 @@ final class MailChimpGateway implements Gateway
         return $this->api->request(
             'lists/' . $this->getListId($listId) . '/members/' . $this->getEmailHash($email),
             array(
-                'email_address' => $email,
+                'status' => 'unsubscribed',
             ),
-            'delete'
+            'patch'
         );
     }
 
