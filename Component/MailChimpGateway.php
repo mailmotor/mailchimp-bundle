@@ -149,13 +149,11 @@ final class MailChimpGateway implements Gateway
      *
      * @param string $email
      * @param string $listId
-     * @param array $mergeFields
      * @return boolean
      */
     public function unsubscribe(
         $email,
-        $listId = null,
-        $mergeFields = array()
+        $listId = null
     ) {
         return $this->api->request(
             'lists/' . $this->getListId($listId) . '/members/' . $this->getEmailHash($email),
