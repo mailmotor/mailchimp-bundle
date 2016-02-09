@@ -1,13 +1,19 @@
 services:
+    # core
+    mailmotor.mailchimp:
+        class: MailMotor\Bundle\MailChimpBundle\Component\MailChimpMailMotor
+        arguments:
+            - "@mailmotor.mailchimp.api"
+            - "%mailmotor.list_id%"
+
+    # gateways
+    mailmotor.mailchimp.subscriber.gateway:
+        class: MailMotor\Bundle\MailChimpBundle\Component\Gateway\MailChimpSubscriberGateway
+        arguments:
+            - "@mailmotor.mailchimp"
+
     # the external mailchimp api that we are using
     mailmotor.mailchimp.api:
         class: Mailchimp\Mailchimp
         arguments:
             - "%mailmotor.api_key%"
-
-    # all gateways must have this service naming convention
-    mailmotor.mailchimp.gateway:
-        class: MailMotor\Bundle\MailChimpBundle\Component\MailChimpGateway
-        arguments:
-            - "@mailmotor.mailchimp.api"
-            - "%mailmotor.list_id%"

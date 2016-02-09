@@ -1,59 +1,35 @@
 <?php
 
-namespace MailMotor\Bundle\MailChimpBundle\Component;
+namespace MailMotor\Bundle\MailChimpBundle\Component\Gateway;
 
-use MailMotor\Bundle\MailMotorBundle\Component\Gateway;
-use MailMotor\Bundle\MailMotorBundle\Component\MailMotorMember;
-use Mailchimp\Mailchimp;
+use MailMotor\Bundle\MailMotorBundle\Component\MailMotor;
+use MailMotor\Bundle\MailMotorBundle\Component\Gateway\SubscriberGateway;
 
 /**
- * MailChimp Gateway
+ * MailChimp Subscriber Gateway
  *
  * @author Jeroen Desloovere <info@jeroendesloovere.be>
  */
-final class MailChimpGateway implements Gateway
+class MailChimpSubscriberGateway implements SubscriberGateway
 {
     /**
-     * The external MailChimp API
-     *
-     * @var mixed
+     * @var MailMotor
      */
-    protected $api;
-
-    /**
-     * The default list id
-     *
-     * @var string
-     */
-    protected $listId;
+    protected $mailMotor;
 
     /**
      * Construct
      *
-     * @param Mailchimp $api
-     * @param string $listId
+     * @param MailMotor $mailMotor
      */
     public function __construct(
-        Mailchimp $api,
-        $listId
+        MailMotor $mailMotor
     ) {
-        $this->api = $api;
-        $this->listId = $listId;
+        $this->mailMotor = $mailMotor;
     }
 
     /**
-     * Get list id
-     *
-     * @param string $listId If you want to use a custom list id
-     * @return string
-     */
-    public function getListId($listId = null)
-    {
-        return ($listId == null) ? $this->listId : $listId;
-    }
-
-    /**
-     * Get
+     * Get a subscriber
      *
      * @param string $email
      * @param string $listId
@@ -64,8 +40,8 @@ final class MailChimpGateway implements Gateway
         $listId = null
     ) {
         try {
-            $listId = $this->getListId($listId);
-            $result = $this->api->request(
+            $listId = $this->mailMotor->getListId($listId);
+            $result = $this->mailMotor->getApi()->request(
                 'lists/' . $listId . '/members/' . $this->getEmailHash($email),
                 array(),
                 'get'
@@ -137,8 +113,8 @@ final class MailChimpGateway implements Gateway
             $bodyParameters['merge_fields'] = $mergeFields;
         }
 
-        return $this->api->request(
-            'lists/' . $this->getListId($listId) . '/members/' . $this->getEmailHash($email),
+        return $this->mailMotor->getApi()->request(
+            'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
             $bodyParameters,
             'put'
         );
@@ -155,8 +131,8 @@ final class MailChimpGateway implements Gateway
         $email,
         $listId = null
     ) {
-        return $this->api->request(
-            'lists/' . $this->getListId($listId) . '/members/' . $this->getEmailHash($email),
+        return $this->mailMotor->getApi()->request(
+            'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
             array(
                 'status' => 'unsubscribed',
             ),
