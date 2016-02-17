@@ -40,13 +40,14 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         $listId = null
     ) {
         try {
-            $listId = $this->mailMotor->getListId($listId);
+            /** @var ArrayCollection $result */
             $result = $this->mailMotor->getApi()->request(
-                'lists/' . $listId . '/members/' . $this->getEmailHash($email),
+                'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
                 array(),
                 'get'
             );
 
+            // getting the member from the ArrayCollection
             return $result->all();
         } catch (\Exception $e) {
             return false;
@@ -103,13 +104,13 @@ class MailChimpSubscriberGateway implements SubscriberGateway
 
         // we received a language
         if ($language !== null) {
-            // define language
+            // add language to parameters
             $parameters['language'] = $language;
         }
 
         // we received merge fields
         if (!empty($mergeFields)) {
-            // define merge fields
+            // add merge fields to parameters
             $parameters['merge_fields'] = $mergeFields;
         }
 
