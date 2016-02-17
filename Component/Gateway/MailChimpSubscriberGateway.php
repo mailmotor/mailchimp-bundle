@@ -95,8 +95,8 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         $mergeFields = array(),
         $language = null
     ) {
-        // init body parameters
-        $bodyParameters = array(
+        // init parameters
+        $parameters = array(
             'email_address' => $email,
             'status' => 'subscribed',
         );
@@ -104,18 +104,18 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         // we received a language
         if ($language !== null) {
             // define language
-            $bodyParameters['language'] = $language;
+            $parameters['language'] = $language;
         }
 
         // we received merge fields
         if (!empty($mergeFields)) {
             // define merge fields
-            $bodyParameters['merge_fields'] = $mergeFields;
+            $parameters['merge_fields'] = $mergeFields;
         }
 
         return $this->mailMotor->getApi()->request(
             'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
-            $bodyParameters,
+            $parameters,
             'put'
         );
     }
