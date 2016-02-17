@@ -40,14 +40,14 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         $listId = null
     ) {
         try {
-            /** @var ArrayCollection $result */
+            /** @var Illuminate\Support\Collection $result */
             $result = $this->mailMotor->getApi()->request(
                 'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
                 array(),
                 'get'
             );
 
-            // getting the member from the ArrayCollection
+            // will return the one and only member array('id', ...) from Illuminate\Support\Collection
             return $result->all();
         } catch (\Exception $e) {
             return false;
