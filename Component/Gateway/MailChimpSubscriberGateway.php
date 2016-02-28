@@ -1,59 +1,35 @@
 <?php
 
-namespace MailMotor\Bundle\MailChimpBundle\Component;
+namespace MailMotor\Bundle\MailChimpBundle\Component\Gateway;
 
-use MailMotor\Bundle\MailMotorBundle\Component\Gateway;
-use MailMotor\Bundle\MailMotorBundle\Component\MailMotorMember;
-use Mailchimp\Mailchimp;
+use MailMotor\Bundle\MailMotorBundle\Component\MailMotor;
+use MailMotor\Bundle\MailMotorBundle\Component\Gateway\SubscriberGateway;
 
 /**
- * MailChimp Gateway
+ * MailChimp Subscriber Gateway
  *
  * @author Jeroen Desloovere <info@jeroendesloovere.be>
  */
-final class MailChimpGateway implements Gateway
+class MailChimpSubscriberGateway implements SubscriberGateway
 {
     /**
-     * The external MailChimp API
-     *
-     * @var mixed
+     * @var MailMotor
      */
-    protected $api;
-
-    /**
-     * The default list id
-     *
-     * @var string
-     */
-    protected $listId;
+    protected $mailMotor;
 
     /**
      * Construct
      *
-     * @param Mailchimp $api
-     * @param string $listId
+     * @param MailMotor $mailMotor
      */
     public function __construct(
-        Mailchimp $api,
-        $listId
+        MailMotor $mailMotor
     ) {
-        $this->api = $api;
-        $this->listId = $listId;
+        $this->mailMotor = $mailMotor;
     }
 
     /**
-     * Get list id
-     *
-     * @param string $listId If you want to use a custom list id
-     * @return string
-     */
-    public function getListId($listId = null)
-    {
-        return ($listId == null) ? $this->listId : $listId;
-    }
-
-    /**
-     * Get
+     * Get a subscriber
      *
      * @param string $email
      * @param string $listId
@@ -64,13 +40,14 @@ final class MailChimpGateway implements Gateway
         $listId = null
     ) {
         try {
-            $listId = $this->getListId($listId);
-            $result = $this->api->request(
-                'lists/' . $listId . '/members/' . $this->getEmailHash($email),
+            /** @var Illuminate\Support\Collection $result */
+            $result = $this->mailMotor->getApi()->request(
+                'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
                 array(),
                 'get'
             );
 
+            // will return the one and only member array('id', ...) from Illuminate\Support\Collection
             return $result->all();
         } catch (\Exception $e) {
             return false;
@@ -119,27 +96,27 @@ final class MailChimpGateway implements Gateway
         $mergeFields = array(),
         $language = null
     ) {
-        // init body parameters
-        $bodyParameters = array(
+        // init parameters
+        $parameters = array(
             'email_address' => $email,
             'status' => 'subscribed',
         );
 
         // we received a language
         if ($language !== null) {
-            // define language
-            $bodyParameters['language'] = $language;
+            // add language to parameters
+            $parameters['language'] = $language;
         }
 
         // we received merge fields
         if (!empty($mergeFields)) {
-            // define merge fields
-            $bodyParameters['merge_fields'] = $mergeFields;
+            // add merge fields to parameters
+            $parameters['merge_fields'] = $mergeFields;
         }
 
-        return $this->api->request(
-            'lists/' . $this->getListId($listId) . '/members/' . $this->getEmailHash($email),
-            $bodyParameters,
+        return $this->mailMotor->getApi()->request(
+            'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
+            $parameters,
             'put'
         );
     }
@@ -155,8 +132,8 @@ final class MailChimpGateway implements Gateway
         $email,
         $listId = null
     ) {
-        return $this->api->request(
-            'lists/' . $this->getListId($listId) . '/members/' . $this->getEmailHash($email),
+        return $this->mailMotor->getApi()->request(
+            'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
             array(
                 'status' => 'unsubscribed',
             ),
