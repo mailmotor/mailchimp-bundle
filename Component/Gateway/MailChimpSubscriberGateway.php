@@ -40,15 +40,15 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         $listId = null
     ) {
         try {
-            /** @var Illuminate\Support\Collection $result */
-            $result = $this->mailMotor->getApi()->request(
+            /** @var Illuminate\Support\Collection $response */
+            $response = $this->mailMotor->getApi()->request(
                 'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
                 array(),
                 'get'
             );
 
             // will return the one and only member array('id', ...) from Illuminate\Support\Collection
-            return $result->all();
+            return $response->all();
         } catch (\Exception $e) {
             return false;
         }
@@ -124,11 +124,14 @@ class MailChimpSubscriberGateway implements SubscriberGateway
             $parameters['merge_fields'] = $mergeFields;
         }
 
-        return $this->mailMotor->getApi()->request(
+        /** @var Illuminate\Support\Collection $response */
+        $response = $this->mailMotor->getApi()->request(
             'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
             $parameters,
             'put'
         );
+
+        return $response;
     }
 
     /**
@@ -142,13 +145,16 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         $email,
         $listId = null
     ) {
-        return $this->mailMotor->getApi()->request(
+        /** @var Illuminate\Support\Collection $response */
+        $response = $this->mailMotor->getApi()->request(
             'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
             array(
                 'status' => 'unsubscribed',
             ),
             'patch'
         );
+
+        return $response;
     }
 
     /**
