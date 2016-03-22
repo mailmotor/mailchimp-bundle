@@ -88,18 +88,28 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      * @param string $listId
      * @param array $mergeFields
      * @param string $language
+     * @param boolean $doubleOptin Members need to validate their emailAddress before they get added to the list
      * @return boolean
      */
     public function subscribe(
         $email,
         $listId = null,
         $mergeFields = array(),
-        $language = null
+        $language = null,
+        $doubleOptin = true
     ) {
+        // default status
+        $status = 'subscribed';
+
+        // redefine to pending
+        if ($doubleOptin) {
+            $status = 'pending';
+        }
+
         // init parameters
         $parameters = array(
             'email_address' => $email,
-            'status' => 'subscribed',
+            'status' => $status,
         );
 
         // we received a language
