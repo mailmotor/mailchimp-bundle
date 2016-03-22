@@ -34,7 +34,7 @@ class MailChimpMailMotor extends MailMotor
     }
 
     /**
-     * Get api
+     * Get the external Mailchimp api
      *
      * @return mixed
      */
