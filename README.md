@@ -20,7 +20,7 @@ public function registerBundles()
     );
 ```
 
-*In app/config/parameters.yml*
+*In `app/config/parameters.yml`*
 ```yaml
     mailmotor.mail_engine:  'mailchimp'
     mailmotor.api_key:      xxx # enter your mailchimp api_key here
