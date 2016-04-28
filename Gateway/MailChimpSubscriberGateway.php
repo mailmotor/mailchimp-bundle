@@ -1,9 +1,10 @@
 <?php
 
-namespace MailMotor\Bundle\MailChimpBundle\Component\Gateway;
+namespace MailMotor\Bundle\MailChimpBundle\Gateway;
 
-use MailMotor\Bundle\MailMotorBundle\Component\MailMotor;
-use MailMotor\Bundle\MailMotorBundle\Component\Gateway\SubscriberGateway;
+use Mailchimp\Mailchimp;
+use MailMotor\Bundle\MailMotorBundle\MailMotor;
+use MailMotor\Bundle\MailMotorBundle\Gateway\SubscriberGateway;
 
 /**
  * MailChimp Subscriber Gateway
@@ -13,19 +14,21 @@ use MailMotor\Bundle\MailMotorBundle\Component\Gateway\SubscriberGateway;
 class MailChimpSubscriberGateway implements SubscriberGateway
 {
     /**
-     * @var MailMotor
+     * The external MailChimp API
+     *
+     * @var Mailchimp
      */
-    protected $mailMotor;
+    protected $api;
 
     /**
      * Construct
      *
-     * @param MailMotor $mailMotor
+     * @param Mailchimp $api
      */
     public function __construct(
-        MailMotor $mailMotor
+        Mailchimp $api
     ) {
-        $this->mailMotor = $mailMotor;
+        $this->api = $api;
     }
 
     /**
@@ -37,18 +40,18 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      */
     public function get(
         $email,
-        $listId = null
+        $listId
     ) {
         try {
-            /** @var Illuminate\Support\Collection $response */
-            $response = $this->mailMotor->getApi()->request(
-                'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
+            /** @var Illuminate\Support\Collection $result */
+            $result = $this->api->request(
+                'lists/' . $listId . '/members/' . $this->getEmailHash($email),
                 array(),
                 'get'
             );
 
             // will return the one and only member array('id', ...) from Illuminate\Support\Collection
-            return $response->all();
+            return $result->all();
         } catch (\Exception $e) {
             return false;
         }
@@ -64,7 +67,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      */
     public function hasStatus(
         $email,
-        $listId = null,
+        $listId,
         $status
     ) {
         $member = $this->get(
@@ -93,10 +96,10 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      */
     public function subscribe(
         $email,
-        $listId = null,
-        $mergeFields = array(),
-        $language = null,
-        $doubleOptin = true
+        $listId,
+        $mergeFields,
+        $language,
+        $doubleOptin
     ) {
         // default status
         $status = 'subscribed';
@@ -124,14 +127,11 @@ class MailChimpSubscriberGateway implements SubscriberGateway
             $parameters['merge_fields'] = $mergeFields;
         }
 
-        /** @var Illuminate\Support\Collection $response */
-        $response = $this->mailMotor->getApi()->request(
-            'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
+        return $this->api->request(
+            'lists/' . $listId . '/members/' . $this->getEmailHash($email),
             $parameters,
             'put'
         );
-
-        return $response;
     }
 
     /**
@@ -143,18 +143,15 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      */
     public function unsubscribe(
         $email,
-        $listId = null
+        $listId
     ) {
-        /** @var Illuminate\Support\Collection $response */
-        $response = $this->mailMotor->getApi()->request(
-            'lists/' . $this->mailMotor->getListId($listId) . '/members/' . $this->getEmailHash($email),
+        return $this->api->request(
+            'lists/' . $listId . '/members/' . $this->getEmailHash($email),
             array(
                 'status' => 'unsubscribed',
             ),
             'patch'
         );
-
-        return $response;
     }
 
     /**
