@@ -58,6 +58,82 @@ class MailChimpSubscriberGateway implements SubscriberGateway
     }
 
     /**
+     * Get interests
+     *
+     * @param string $listId
+     * @return array
+     */
+    public function getInterests(
+        $listId
+    ) {
+        try {
+            /** @var Illuminate\Support\Collection $result */
+            $interestCategories = $this->api->request(
+                'lists/' . $listId . '/interest-categories',
+                array(),
+                'get'
+            );
+
+            // Init $interests
+            $interests = array();
+
+            // Loop all interest categories
+            foreach ($interestCategories->all()['categories'] as $interestCategory) {
+                // Define interestCategoryItems
+                $interestCategoryItems = $this->getInterestsForCategoryId(
+                    $interestCategory->id,
+                    $listId
+                );
+
+                // Init children
+                $children = array();
+
+                // Loop interests
+                foreach ($interestCategoryItems['interests'] as $interestCategoryItem) {
+                    // Add child to interestCategory children
+                    $children[$interestCategoryItem->id] = $interestCategoryItem->name;
+                }
+
+                // Add interestCategory to interests
+                $interests[$interestCategory->id] = [
+                    'title' => $interestCategory->title,
+                    'children' => $children,
+                ];
+            }
+
+            return $interests;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Get interest category id
+     *
+     * @param string $interestCategoryId
+     * @param string $listId
+     * @return array
+     */
+    protected function getInterestsForCategoryId(
+        $interestCategoryId,
+        $listId
+    ) {
+        try {
+            /** @var Illuminate\Support\Collection $result */
+            $result = $this->api->request(
+                'lists/' . $listId . '/interest-categories/' . $interestCategoryId . '/interests',
+                array(),
+                'get'
+            );
+
+            // will return the one and only member array('id', ...) from Illuminate\Support\Collection
+            return $result->all();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * Has status
      *
      * @param string $email
@@ -89,16 +165,18 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      *
      * @param string $email
      * @param string $listId
-     * @param array $mergeFields
      * @param string $language
+     * @param array $mergeFields
+     * @param array $interests
      * @param boolean $doubleOptin Members need to validate their emailAddress before they get added to the list
      * @return boolean
      */
     public function subscribe(
         $email,
         $listId,
-        $mergeFields,
         $language,
+        $mergeFields,
+        $interests,
         $doubleOptin
     ) {
         // default status
@@ -125,6 +203,20 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         if (!empty($mergeFields)) {
             // add merge fields to parameters
             $parameters['merge_fields'] = $mergeFields;
+        }
+
+        // we received interests
+        if (!empty($interests)) {
+            // Init interest object
+            $interestsObject = new \stdClass();
+
+            // Loop interests
+            foreach ($interests as $id => $value) {
+                $interestsObject->{$id} = (bool) $value;
+            }
+
+            // Add interests to parameters
+            $parameters['interests'] = $interestsObject;
         }
 
         return $this->api->request(

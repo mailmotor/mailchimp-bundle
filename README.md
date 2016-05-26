@@ -31,8 +31,9 @@ mailmotor.list_id:      xxx # enter the mailchimp default list_id here
 ```php
 $this->get('mailmotor.subscriber')->subscribe(
     $email,         // f.e.: 'jeroen@siesqo.be'
-    $mergeFields,   // f.e.: ['FNAME' => 'Jeroen', 'LNAME' => 'Desloovere']
     $language,      // f.e.: 'nl'
+    $mergeFields,   // f.e.: ['FNAME' => 'Jeroen', 'LNAME' => 'Desloovere']
+    $interests,     // f.e.: ['9A28948d9' => true, '8998ASAA' => false]
     $doubleOptin,   // OPTIONAL, default = true
     $listId         // OPTIONAL, default listId is in your config parameters
 );
@@ -87,8 +88,8 @@ if ($noErrors)
         // Subscribe the user to our default group
         $this->get('mailmotor.subscriber')->subscribe(
             $email,
-            $mergeFields,
-            $language
+            $language,
+            $mergeFields
         );
     // Fallback for when no mailmotor parameters are defined
     } catch (NotImplementedException $e) {
