@@ -3,7 +3,6 @@
 namespace MailMotor\Bundle\MailChimpBundle\Gateway;
 
 use Mailchimp\Mailchimp;
-use MailMotor\Bundle\MailMotorBundle\MailMotor;
 use MailMotor\Bundle\MailMotorBundle\Gateway\SubscriberGateway;
 
 /**
