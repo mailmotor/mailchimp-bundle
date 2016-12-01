@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8f49962a1f736b422b12e0c99366180f",
-    "content-hash": "b5fdedf459fad0d03048f002f3982e56",
+    "hash": "e4a37eaa657611f251a3ce9652fbbd45",
+    "content-hash": "59ce67f7e1632afd277a2da919835241",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -345,16 +345,16 @@
         },
         {
             "name": "mailmotor/mailmotor-bundle",
-            "version": "1.8.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailmotor/mailmotor-bundle.git",
-                "reference": "67711d025a6d36cca35553cbb4ccaf3af462f68b"
+                "reference": "2e9202ac3752291e7b94973e6d21c352634df07c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailmotor/mailmotor-bundle/zipball/67711d025a6d36cca35553cbb4ccaf3af462f68b",
-                "reference": "67711d025a6d36cca35553cbb4ccaf3af462f68b",
+                "url": "https://api.github.com/repos/mailmotor/mailmotor-bundle/zipball/2e9202ac3752291e7b94973e6d21c352634df07c",
+                "reference": "2e9202ac3752291e7b94973e6d21c352634df07c",
                 "shasum": ""
             },
             "require": {
@@ -389,7 +389,7 @@
                 "bundle",
                 "php"
             ],
-            "time": "2016-11-22 14:42:52"
+            "time": "2016-12-01 07:53:26"
         },
         {
             "name": "pacely/mailchimp-apiv3",
