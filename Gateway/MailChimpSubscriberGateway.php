@@ -31,13 +31,37 @@ class MailChimpSubscriberGateway implements SubscriberGateway
     }
 
     /**
+     * Exists
+     *
+     * @param string $email
+     * @param string $listId
+     * @return boolean
+     */
+    public function exists (
+        $email,
+        $listId
+    ) {
+        try {
+            // Define result
+            $result = $this->get(
+                $email,
+                $listId
+            );
+
+            return (!empty($result));
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * Get a subscriber
      *
      * @param string $email
      * @param string $listId
-     * @return array
+     * @return mixed boolean|Illuminate\Support\Collection
      */
-    public function get(
+    private function get(
         $email,
         $listId
     ) {
