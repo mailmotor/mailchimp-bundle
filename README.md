@@ -157,3 +157,7 @@ mailmotor.list_id:      xxx # enter the crazy default list_id here
 ```
 
 Then you just need to duplicate all files from another mail engine, like f.e.: "mailmotor/mailchimp-bundle" and replace all the logic for your own mail engine.
+
+## Credits
+
+* Jeroen Desloovere - [Github](https://github.com/jeroendesloovere), [Website](http://jeroendesloovere.be)
