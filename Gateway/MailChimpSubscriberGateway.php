@@ -51,7 +51,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         try {
             /** @var Illuminate\Support\Collection $result */
             $result = $this->api->request(
-                'lists/' . $listId . '/members/' . $this->getEmailHash($email),
+                'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
                 array(),
                 'get'
             );
@@ -199,7 +199,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         }
 
         return $this->api->request(
-            'lists/' . $listId . '/members/' . $this->getEmailHash($email),
+            'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
             $parameters,
             'put'
         );
@@ -208,7 +208,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
     public function unsubscribe(string $email, string $listId): bool
     {
         return $this->api->request(
-            'lists/' . $listId . '/members/' . $this->getEmailHash($email),
+            'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
             array(
                 'status' => 'unsubscribed',
             ),
@@ -216,7 +216,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         );
     }
 
-    protected function getEmailHash($email): string
+    protected function getHashedEmail($email): string
     {
         return md5(strtolower($email));
     }
