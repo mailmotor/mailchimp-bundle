@@ -2,6 +2,7 @@
 
 namespace MailMotor\Bundle\MailChimpBundle\Gateway;
 
+use Illuminate\Support\Collection;
 use Mailchimp\Mailchimp;
 use MailMotor\Bundle\MailMotorBundle\Gateway\SubscriberGateway;
 
@@ -44,19 +45,19 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      *
      * @param string $email
      * @param string $listId
-     * @return mixed boolean|Illuminate\Support\Collection
+     * @return mixed boolean|Collection
      */
     private function get(string $email, string $listId)
     {
         try {
-            /** @var Illuminate\Support\Collection $result */
+            /** @var Collection $result */
             $result = $this->api->request(
                 'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
                 array(),
                 'get'
             );
 
-            // will return the one and only member array('id', ...) from Illuminate\Support\Collection
+            // will return the one and only member array('id', ...) from Collection
             return $result->all();
         } catch (\Exception $e) {
             return false;
@@ -66,7 +67,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
     public function getInterests(string $listId): array
     {
         try {
-            /** @var Illuminate\Support\Collection $result */
+            /** @var Collection $result */
             $interestCategories = $this->api->request(
                 'lists/' . $listId . '/interest-categories',
                 array(),
@@ -109,14 +110,14 @@ class MailChimpSubscriberGateway implements SubscriberGateway
     protected function getInterestsForCategoryId(string $interestCategoryId, string $listId): array
     {
         try {
-            /** @var Illuminate\Support\Collection $result */
+            /** @var Collection $result */
             $result = $this->api->request(
                 'lists/' . $listId . '/interest-categories/' . $interestCategoryId . '/interests',
                 array(),
                 'get'
             );
 
-            // will return the one and only member array('id', ...) from Illuminate\Support\Collection
+            // will return the one and only member array('id', ...) from Collection
             return $result->all();
         } catch (\Exception $e) {
             return false;
