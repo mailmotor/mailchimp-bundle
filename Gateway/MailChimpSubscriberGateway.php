@@ -140,6 +140,15 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         return false;
     }
 
+    public function ping(string $listId): bool
+    {
+        try {
+            return $this->api->get('/lists/' . $listId) instanceof Collection;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     /**
      * Subscribe
      *
