@@ -2,6 +2,7 @@
 
 namespace MailMotor\Bundle\MailChimpBundle\Gateway;
 
+use Illuminate\Support\Collection;
 use Mailchimp\Mailchimp;
 use MailMotor\Bundle\MailMotorBundle\Gateway\SubscriberGateway;
 
@@ -19,28 +20,13 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      */
     protected $api;
 
-    /**
-     * Construct
-     *
-     * @param Mailchimp $api
-     */
-    public function __construct(
-        Mailchimp $api
-    ) {
+    public function __construct(Mailchimp $api)
+    {
         $this->api = $api;
     }
 
-    /**
-     * Exists
-     *
-     * @param string $email
-     * @param string $listId
-     * @return boolean
-     */
-    public function exists (
-        $email,
-        $listId
-    ) {
+    public function exists(string $email, string $listId): bool
+    {
         try {
             // Define result
             $result = $this->get(
@@ -59,38 +45,29 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      *
      * @param string $email
      * @param string $listId
-     * @return mixed boolean|Illuminate\Support\Collection
+     * @return mixed boolean|Collection
      */
-    private function get(
-        $email,
-        $listId
-    ) {
+    private function get(string $email, string $listId)
+    {
         try {
-            /** @var Illuminate\Support\Collection $result */
+            /** @var Collection $result */
             $result = $this->api->request(
-                'lists/' . $listId . '/members/' . $this->getEmailHash($email),
+                'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
                 array(),
                 'get'
             );
 
-            // will return the one and only member array('id', ...) from Illuminate\Support\Collection
+            // will return the one and only member array('id', ...) from Collection
             return $result->all();
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    /**
-     * Get interests
-     *
-     * @param string $listId
-     * @return array
-     */
-    public function getInterests(
-        $listId
-    ) {
+    public function getInterests(string $listId): array
+    {
         try {
-            /** @var Illuminate\Support\Collection $result */
+            /** @var Collection $result */
             $interestCategories = $this->api->request(
                 'lists/' . $listId . '/interest-categories',
                 array(),
@@ -130,45 +107,25 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         }
     }
 
-    /**
-     * Get interest category id
-     *
-     * @param string $interestCategoryId
-     * @param string $listId
-     * @return array
-     */
-    protected function getInterestsForCategoryId(
-        $interestCategoryId,
-        $listId
-    ) {
+    protected function getInterestsForCategoryId(string $interestCategoryId, string $listId): array
+    {
         try {
-            /** @var Illuminate\Support\Collection $result */
+            /** @var Collection $result */
             $result = $this->api->request(
                 'lists/' . $listId . '/interest-categories/' . $interestCategoryId . '/interests',
                 array(),
                 'get'
             );
 
-            // will return the one and only member array('id', ...) from Illuminate\Support\Collection
+            // will return the one and only member array('id', ...) from Collection
             return $result->all();
         } catch (\Exception $e) {
             return false;
         }
     }
 
-    /**
-     * Has status
-     *
-     * @param string $email
-     * @param string $listId
-     * @param string $status
-     * @return boolean
-     */
-    public function hasStatus(
-        $email,
-        $listId,
-        $status
-    ) {
+    public function hasStatus(string $email, string $listId, string $status): bool
+    {
         $member = $this->get(
             $email,
             $listId
@@ -183,6 +140,15 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         return false;
     }
 
+    public function ping(string $listId): bool
+    {
+        try {
+            return $this->api->get('/lists/' . $listId) instanceof Collection;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     /**
      * Subscribe
      *
@@ -191,17 +157,17 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      * @param string $language
      * @param array $mergeFields
      * @param array $interests The array is like: ['9AS489SQF' => true, '4SDF8S9DF1' => false]
-     * @param boolean $doubleOptin Members need to validate their emailAddress before they get added to the list
+     * @param bool $doubleOptin Members need to validate their emailAddress before they get added to the list
      * @return boolean
      */
     public function subscribe(
-        $email,
-        $listId,
-        $language,
-        $mergeFields,
-        $interests,
-        $doubleOptin
-    ) {
+        string $email,
+        string $listId,
+        string $language,
+        array $mergeFields,
+        array $interests,
+        bool $doubleOptin
+    ): bool {
         // default status
         $status = 'subscribed';
 
@@ -243,25 +209,16 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         }
 
         return $this->api->request(
-            'lists/' . $listId . '/members/' . $this->getEmailHash($email),
+            'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
             $parameters,
             'put'
         );
     }
 
-    /**
-     * Unsubscribe
-     *
-     * @param string $email
-     * @param string $listId
-     * @return boolean
-     */
-    public function unsubscribe(
-        $email,
-        $listId
-    ) {
+    public function unsubscribe(string $email, string $listId): bool
+    {
         return $this->api->request(
-            'lists/' . $listId . '/members/' . $this->getEmailHash($email),
+            'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
             array(
                 'status' => 'unsubscribed',
             ),
@@ -269,13 +226,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         );
     }
 
-    /**
-     * Get email hash
-     *
-     * @param string $email
-     * @return string
-     */
-    protected function getEmailHash($email)
+    protected function getHashedEmail($email): string
     {
         return md5(strtolower($email));
     }

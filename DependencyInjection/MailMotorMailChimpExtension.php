@@ -14,10 +14,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class MailMotorMailChimpExtension extends Extension
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function load(array $mergedConfig, ContainerBuilder $container)
+    public function load(array $mergedConfig, ContainerBuilder $container): void
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
