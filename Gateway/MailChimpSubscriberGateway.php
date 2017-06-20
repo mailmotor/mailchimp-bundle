@@ -19,28 +19,13 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      */
     protected $api;
 
-    /**
-     * Construct
-     *
-     * @param Mailchimp $api
-     */
-    public function __construct(
-        Mailchimp $api
-    ) {
+    public function __construct(Mailchimp $api)
+    {
         $this->api = $api;
     }
 
-    /**
-     * Exists
-     *
-     * @param string $email
-     * @param string $listId
-     * @return boolean
-     */
-    public function exists (
-        $email,
-        $listId
-    ) {
+    public function exists(string $email, string $listId): bool
+    {
         try {
             // Define result
             $result = $this->get(
@@ -61,10 +46,8 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      * @param string $listId
      * @return mixed boolean|Illuminate\Support\Collection
      */
-    private function get(
-        $email,
-        $listId
-    ) {
+    private function get(string $email, string $listId)
+    {
         try {
             /** @var Illuminate\Support\Collection $result */
             $result = $this->api->request(
@@ -80,15 +63,8 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         }
     }
 
-    /**
-     * Get interests
-     *
-     * @param string $listId
-     * @return array
-     */
-    public function getInterests(
-        $listId
-    ) {
+    public function getInterests(string $listId): array
+    {
         try {
             /** @var Illuminate\Support\Collection $result */
             $interestCategories = $this->api->request(
@@ -130,17 +106,8 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         }
     }
 
-    /**
-     * Get interest category id
-     *
-     * @param string $interestCategoryId
-     * @param string $listId
-     * @return array
-     */
-    protected function getInterestsForCategoryId(
-        $interestCategoryId,
-        $listId
-    ) {
+    protected function getInterestsForCategoryId(string $interestCategoryId, string $listId): array
+    {
         try {
             /** @var Illuminate\Support\Collection $result */
             $result = $this->api->request(
@@ -156,19 +123,8 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         }
     }
 
-    /**
-     * Has status
-     *
-     * @param string $email
-     * @param string $listId
-     * @param string $status
-     * @return boolean
-     */
-    public function hasStatus(
-        $email,
-        $listId,
-        $status
-    ) {
+    public function hasStatus(string $email, string $listId, string $status): bool
+    {
         $member = $this->get(
             $email,
             $listId
@@ -195,13 +151,13 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      * @return boolean
      */
     public function subscribe(
-        $email,
-        $listId,
-        $language,
-        $mergeFields,
-        $interests,
-        $doubleOptin
-    ) {
+        string $email,
+        string $listId,
+        string $language,
+        array $mergeFields,
+        array $interests,
+        bool $doubleOptin
+    ): bool {
         // default status
         $status = 'subscribed';
 
@@ -249,17 +205,8 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         );
     }
 
-    /**
-     * Unsubscribe
-     *
-     * @param string $email
-     * @param string $listId
-     * @return boolean
-     */
-    public function unsubscribe(
-        $email,
-        $listId
-    ) {
+    public function unsubscribe(string $email, string $listId): bool
+    {
         return $this->api->request(
             'lists/' . $listId . '/members/' . $this->getEmailHash($email),
             array(
@@ -269,13 +216,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         );
     }
 
-    /**
-     * Get email hash
-     *
-     * @param string $email
-     * @return string
-     */
-    protected function getEmailHash($email)
+    protected function getEmailHash($email): string
     {
         return md5(strtolower($email));
     }
