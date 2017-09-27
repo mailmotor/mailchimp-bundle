@@ -219,13 +219,15 @@ class MailChimpSubscriberGateway implements SubscriberGateway
 
     public function unsubscribe(string $email, string $listId): bool
     {
-        return $this->api->request(
+        $this->api->request(
             'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
             array(
                 'status' => 'unsubscribed',
             ),
             'patch'
         );
+
+        return true;
     }
 
     protected function getHashedEmail($email): string
