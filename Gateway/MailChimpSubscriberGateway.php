@@ -103,7 +103,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
 
             return $interests;
         } catch (\Exception $e) {
-            return false;
+            return [];
         }
     }
 
@@ -120,7 +120,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
             // will return the one and only member array('id', ...) from Collection
             return $result->all();
         } catch (\Exception $e) {
-            return false;
+            return [];
         }
     }
 
