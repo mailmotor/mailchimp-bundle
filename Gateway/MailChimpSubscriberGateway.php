@@ -28,7 +28,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
     public function exists(string $email, string $listId): bool
     {
         try {
-            // Define result
+            /** @var array $result */
             $result = $this->get(
                 $email,
                 $listId
@@ -45,9 +45,9 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      *
      * @param string $email
      * @param string $listId
-     * @return mixed boolean|Collection
+     * @return array
      */
-    private function get(string $email, string $listId)
+    private function get(string $email, string $listId): array
     {
         try {
             /** @var Collection $result */
@@ -60,7 +60,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
             // will return the one and only member array('id', ...) from Collection
             return $result->all();
         } catch (\Exception $e) {
-            return false;
+            return [];
         }
     }
 
@@ -103,7 +103,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
 
             return $interests;
         } catch (\Exception $e) {
-            return false;
+            return [];
         }
     }
 
@@ -120,7 +120,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
             // will return the one and only member array('id', ...) from Collection
             return $result->all();
         } catch (\Exception $e) {
-            return false;
+            return [];
         }
     }
 
@@ -208,22 +208,26 @@ class MailChimpSubscriberGateway implements SubscriberGateway
             $parameters['interests'] = $interestsObject;
         }
 
-        return $this->api->request(
+        $this->api->request(
             'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
             $parameters,
             'put'
         );
+
+        return true;
     }
 
     public function unsubscribe(string $email, string $listId): bool
     {
-        return $this->api->request(
+        $this->api->request(
             'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
             array(
                 'status' => 'unsubscribed',
             ),
             'patch'
         );
+
+        return true;
     }
 
     protected function getHashedEmail($email): string
