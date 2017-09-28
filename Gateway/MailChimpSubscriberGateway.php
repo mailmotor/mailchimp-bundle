@@ -208,11 +208,13 @@ class MailChimpSubscriberGateway implements SubscriberGateway
             $parameters['interests'] = $interestsObject;
         }
 
-        return $this->api->request(
+        $this->api->request(
             'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
             $parameters,
             'put'
         );
+
+        return true;
     }
 
     public function unsubscribe(string $email, string $listId): bool
