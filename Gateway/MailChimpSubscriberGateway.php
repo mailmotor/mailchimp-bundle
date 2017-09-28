@@ -45,9 +45,9 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      *
      * @param string $email
      * @param string $listId
-     * @return mixed boolean|Collection
+     * @return array
      */
-    private function get(string $email, string $listId)
+    private function get(string $email, string $listId): array
     {
         try {
             /** @var Collection $result */
@@ -60,7 +60,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
             // will return the one and only member array('id', ...) from Collection
             return $result->all();
         } catch (\Exception $e) {
-            return false;
+            return [];
         }
     }
 
