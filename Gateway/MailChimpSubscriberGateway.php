@@ -28,7 +28,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
     public function exists(string $email, string $listId): bool
     {
         try {
-            // Define result
+            /** @var array $result */
             $result = $this->get(
                 $email,
                 $listId
