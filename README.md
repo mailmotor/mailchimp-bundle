@@ -1,5 +1,10 @@
 # MailChimpBundle
 
+[![Latest Stable Version](http://img.shields.io/packagist/v/mailmotor/mailchimp-bundle.svg)](https://packagist.org/packages/mailmotor/mailchimp-bundle)
+[![License](http://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/mailmotor/mailchimp-bundle/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/mailmotor/mailchimp-bundle.svg?branch=new-version)](https://travis-ci.org/mailmotor/mailchimp-bundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mailmotor/mailchimp-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mailmotor/mailchimp-bundle/?branch=master)
+
 > Subscribing/Unsubscribing to your own mailinglist has never been this easy! Thanks to this Symfony2 bundle.
 
 ## Examples
