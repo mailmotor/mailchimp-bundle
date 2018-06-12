@@ -132,7 +132,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
         );
 
         // we have found a member
-        if (is_array($member)) {
+        if (is_array($member) && !empty($member)) {
             return ($member['status'] === $status);
         }
 
