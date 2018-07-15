@@ -2,6 +2,7 @@
 
 namespace MailMotor\Bundle\MailChimpBundle\Gateway;
 
+use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Collection;
 use Mailchimp\Mailchimp;
 use MailMotor\Bundle\MailMotorBundle\Gateway\SubscriberGateway;
@@ -70,7 +71,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
             /** @var Collection $result */
             $interestCategories = $this->api->request(
                 'lists/' . $listId . '/interest-categories',
-                array(),
+                array(RequestOptions::TIMEOUT => 5),
                 'get'
             );
 
