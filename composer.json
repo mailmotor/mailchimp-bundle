@@ -14,11 +14,14 @@
         }
     ],
     "require": {
-        "php": "^7.1",
-        "pacely/mailchimp-apiv3": "~1.0",
-        "mailmotor/mailmotor-bundle": "^3.0"
+        "php": "^7.4||^8.0",
+        "mailmotor/mailmotor-bundle" : "^4.0",
+        "mailchimp/marketing": "^3.0"
     },
     "autoload": {
         "psr-4": { "MailMotor\\Bundle\\MailChimpBundle\\": "" }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
     }
 }

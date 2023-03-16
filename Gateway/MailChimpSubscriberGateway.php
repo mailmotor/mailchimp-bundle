@@ -2,9 +2,7 @@
 
 namespace MailMotor\Bundle\MailChimpBundle\Gateway;
 
-use GuzzleHttp\RequestOptions;
-use Illuminate\Support\Collection;
-use Mailchimp\Mailchimp;
+use MailchimpMarketing\ApiClient;
 use MailMotor\Bundle\MailMotorBundle\Gateway\SubscriberGateway;
 
 /**
@@ -17,13 +15,17 @@ class MailChimpSubscriberGateway implements SubscriberGateway
     /**
      * The external MailChimp API
      *
-     * @var Mailchimp
+     * @var ApiClient
      */
     protected $api;
 
-    public function __construct(Mailchimp $api)
+    public function __construct(string $apiKey)
     {
-        $this->api = $api;
+        $this->api = new ApiClient();
+
+        $this->api->setConfig([
+            'apiKey' => $apiKey,
+        ]);
     }
 
     public function exists(string $email, string $listId): bool
@@ -51,15 +53,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
     private function get(string $email, string $listId): array
     {
         try {
-            /** @var Collection $result */
-            $result = $this->api->request(
-                'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
-                array(),
-                'get'
-            );
-
-            // will return the one and only member array('id', ...) from Collection
-            return $result->all();
+            return $this->api->lists->getListMember($listId, $this->getHashedEmail($email));
         } catch (\Exception $e) {
             return [];
         }
@@ -68,12 +62,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
     public function getInterests(string $listId): array
     {
         try {
-            /** @var Collection $result */
-            $interestCategories = $this->api->request(
-                'lists/' . $listId . '/interest-categories',
-                array(RequestOptions::TIMEOUT => 5),
-                'get'
-            );
+            $interestCategories = $this->api->lists->getListInterestCategories($listId);
 
             // Init $interests
             $interests = array();
@@ -111,15 +100,7 @@ class MailChimpSubscriberGateway implements SubscriberGateway
     protected function getInterestsForCategoryId(string $interestCategoryId, string $listId): array
     {
         try {
-            /** @var Collection $result */
-            $result = $this->api->request(
-                'lists/' . $listId . '/interest-categories/' . $interestCategoryId . '/interests',
-                array(),
-                'get'
-            );
-
-            // will return the one and only member array('id', ...) from Collection
-            return $result->all();
+            return $this->api->lists->getInterestCategory($listId, $interestCategoryId);
         } catch (\Exception $e) {
             return [];
         }
@@ -144,7 +125,9 @@ class MailChimpSubscriberGateway implements SubscriberGateway
     public function ping(string $listId): bool
     {
         try {
-            return $this->api->get('/lists/' . $listId) instanceof Collection;
+            $this->api->lists->getList($listId);
+
+            return true;
         } catch (\Exception $e) {
             return false;
         }
@@ -209,23 +192,19 @@ class MailChimpSubscriberGateway implements SubscriberGateway
             $parameters['interests'] = $interestsObject;
         }
 
-        $this->api->request(
-            'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
-            $parameters,
-            'put'
-        );
+        $this->api->lists->setListMember($listId, $this->getHashedEmail($email), $parameters);
 
         return true;
     }
 
     public function unsubscribe(string $email, string $listId): bool
     {
-        $this->api->request(
-            'lists/' . $listId . '/members/' . $this->getHashedEmail($email),
+        $this->api->lists->updateListMember(
+            $listId,
+            $this->getHashedEmail($email),
             array(
-                'status' => 'unsubscribed',
-            ),
-            'patch'
+            'status' => 'unsubscribed',
+            )
         );
 
         return true;
