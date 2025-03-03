@@ -4,5 +4,6 @@ services:
         class: MailMotor\Bundle\MailChimpBundle\Gateway\MailChimpSubscriberGateway
         arguments:
             - "%mailmotor.api_key%"
+            - "%mailmotor.server%"
         tags:
             - { name: mailmotor.subscriber_gateway, alias: mailchimp }

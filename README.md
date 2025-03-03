@@ -23,6 +23,7 @@ public function registerBundles()
 ```yaml
 mailmotor.mail_engine:  'mailchimp'
 mailmotor.api_key:      xxx # enter your mailchimp api_key here
+mailmotor.server:       xxx # enter your mailchimp server prefix here (f.e. us1)
 mailmotor.list_id:      xxx # enter the mailchimp default list_id here
 ```
 
