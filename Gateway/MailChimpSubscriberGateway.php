@@ -19,12 +19,15 @@ class MailChimpSubscriberGateway implements SubscriberGateway
      */
     protected $api;
 
-    public function __construct(string $apiKey)
-    {
+    public function __construct(
+        string $apiKey,
+        string $server
+    ) {
         $this->api = new ApiClient();
 
         $this->api->setConfig([
             'apiKey' => $apiKey,
+            'server' => $server,
         ]);
     }
 
